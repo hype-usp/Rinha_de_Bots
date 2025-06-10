@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "bots/bots.h"
+#include "jogo/jogo.h"
 
 /***********************
  * Compilação do código principal:
@@ -33,15 +34,13 @@ int main(int argc, char** argv) {
     const size_t num_bots = (size_t)(&__stop_bots - &__start_bots);
     
     // Cria nossa lista de ponteiros para os bots.
-    Bot* lista_de_bots[num_bots];
+    Bot *lista_de_bots[num_bots];
 
     // Itera pelos bots na seção de memória e preenche a lista.
     for (size_t i = 0; i < num_bots; ++i) {
         lista_de_bots[i] = &__start_bots + i;
         printf("Bot #%zu encontrado: %s da equipe %s\n", i, lista_de_bots[i]->nome, lista_de_bots[i]->equipe);
     }
-
-
     printf("\nTotal de %zu bots prontos para a rinha!\n", num_bots);
 
     qsort(lista_de_bots, num_bots, sizeof(Bot*), compara_bots_por_id);
@@ -49,6 +48,8 @@ int main(int argc, char** argv) {
         for(size_t i = 0; i < num_bots; i++) {
             printf("  ID: %d, Nome: %s\n", lista_de_bots[i]->id, lista_de_bots[i]->nome);
     }
+
+    inicia_simulacao(lista_de_bots, num_bots);
 
     return 0;
 }

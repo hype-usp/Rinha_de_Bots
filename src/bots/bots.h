@@ -16,7 +16,7 @@
 // Tipo representando um bot (jogador)
 typedef struct aux{
     // Propriedades para simulação
-    unsigned short int id;          // ID do bot
+    BotID id;                       // ID do bot
     char nome[NOME_TAMANHO_MAX];    // Nome do bot
     char equipe[NOME_TAMANHO_MAX];  // Nome da equipe que criou o bot
     short int pontuacoes[NUM_BOTS]; // Lista de pontuação por oponente
