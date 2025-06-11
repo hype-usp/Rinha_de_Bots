@@ -1,7 +1,10 @@
 #ifndef JOGO_H
 #define JOGO_H
 
+#include <stddef.h>
+#include "../tipos.h"
 #include "../bots/bots.h"
+#include "../estatisticas/estatisticas.h"
 
 #define CONFRONTOS_POR_COMBATE 100
 #define EMPATE 255 // Um número alto que não será ID de um bot para representar empates
@@ -11,7 +14,7 @@
  * a lista de bots e o número de bots como argumento, pois
  * nenhum contexto adicional é necessário
  *************************************************************/ 
-Estatistica inicia_simulacao(const Bot **bots, size_t num_bots);
+Estatistica inicia_simulacao(Bot **bots, size_t num_bots);
 
 /**************************************************************
  * Simula um "combate" entre dois bots. Um combate é uma
@@ -32,6 +35,6 @@ BotID simula_confronto(Bot *bot1, Bot *bot2);
  * Simula um turno de um confronto, que se consiste em uma
  * tomada de decisão por parte de ambos os bots
  *************************************************************/
-EstadoConfronto simula_turno(Bot *bot1, Bot *bot2);
+ResultadoTurno simula_turno(Bot *bot1, Bot *bot2, Historico hist_bot1, Historico hist_bot2, unsigned short int num_turno);
 
 #endif

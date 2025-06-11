@@ -1,10 +1,9 @@
 #include "jogo.h"
-#include "../tipos.h"
-#include "../estatisticas/estatisticas.h"
+#include "../acoes/acoes.h"
 
-Estatistica inicia_simulacao(const Bot **bots, size_t num_bots) {
-	Estatistica estatisticas;
-	inicializa_estatistica(&estatisticas);
+Estatistica inicia_simulacao(Bot **bots, size_t num_bots) {
+	//Estatistica estatisticas;
+	//inicializa_estatistica(&estatisticas);
 
 	/**********************************************************
 	 * Loop externo: b1 é o ID do primeiro bot no combate.
@@ -46,13 +45,81 @@ BotID simula_combate(Bot *bot1, Bot *bot2) {
 }
 
 BotID simula_confronto(Bot *bot1, Bot *bot2) {
-	EstadoConfronto estado_confronto;
-	while((estado_confronto = simula_turno(bot1, bot2)) == INACABADO) {}
-	if(estado_confronto == BOT1_VENCEU) return bot1->id;
-	if(estado_confronto == BOT2_VENCEU) return bot2->id;
+	ResultadoTurno resultado_turno = {.estado_confronto = INACABADO};
+	Historico hist_bot1;
+	Historico hist_bot2;
+	unsigned short int turno_atual = 0;
+	/**********************************************************
+	 * Loop que simula os turnos do confronto até que haja
+	 * alguma morte ou o confronto chege no número máximo de
+	 * turnos
+	 *********************************************************/ 
+	while(resultado_turno.estado_confronto == INACABADO) {
+		resultado_turno = simula_turno(bot1, bot2, hist_bot1, hist_bot2, turno_atual);
+		hist_bot1[turno_atual] = resultado_turno.acao_bot1;
+		hist_bot2[turno_atual] = resultado_turno.acao_bot2;
+		turno_atual++;
+	}
+	if(resultado_turno.estado_confronto == BOT2_VENCEU) return bot2->id;
+	if(resultado_turno.estado_confronto == BOT1_VENCEU) return bot1->id;
 	return EMPATE;
 }
 
-EstadoConfronto simula_turno(Bot *bot1, Bot *bot2) {
-	// To-do: implementar
+ResultadoTurno simula_turno(Bot *bot1, Bot *bot2, Historico hist_bot1, Historico hist_bot2, unsigned short int turno) {
+	ResultadoTurno resultado_turno;
+	// Checando se já passamos do limite máximo de turnos por confronto
+	if(turno >= MAX_TURNOS) {
+		resultado_turno.estado_confronto = EXCESSO_TURNOS;
+		return resultado_turno;
+	}
+	// Deixando os bots tomarem suas decisões, estas duas lihas são o coração do programa
+	Acao acao_bot1 = bot1->tomar_decisao(bot1, hist_bot1, hist_bot2, turno);
+	Acao acao_bot2 = bot2->tomar_decisao(bot2, hist_bot2, hist_bot1, turno);
+	resultado_turno.acao_bot1 = acao_bot1;
+	resultado_turno.acao_bot2 = acao_bot2;
+	// Aplicando o efeito correspondente à ação do bot 1
+	switch(acao_bot1) {
+		case RECARGA:
+			recarga(bot1);
+			break;
+		case ATAQUE:
+			if(acao_bot2 == CONTRA_ATAQUE) ataque(bot1, acao_bot1); 
+			else ataque(bot2, acao_bot2);
+			break;
+		case ATAQUE_PESADO:
+			if(acao_bot2 == CONTRA_ATAQUE) ataque_pesado(bot1, acao_bot1);
+			else ataque_pesado(bot2, acao_bot2);
+			break;
+		case CURA:
+			cura(bot1);
+			break;
+	}
+	// Aplicando o efeito correspondente à ação do bot 2
+	switch(acao_bot2) {	
+		case RECARGA:
+			recarga(bot2);
+			break;
+		case ATAQUE:
+			if(acao_bot1 == CONTRA_ATAQUE) ataque(bot2, acao_bot2); 
+			else ataque(bot1, acao_bot1);
+			break;
+		case ATAQUE_PESADO:
+			if(acao_bot1 == CONTRA_ATAQUE) ataque_pesado(bot2, acao_bot2);
+			else ataque_pesado(bot1, acao_bot1);
+			break;
+		case CURA:
+			cura(bot1);
+			break;
+	}
+	// Checando as outras condições de término de confronto
+	if(bot1->vida <= 0 && bot2->vida <= 0)
+		resultado_turno.estado_confronto = AMBOS_MORRERAM;
+	else if(bot1->vida <= 0)
+		resultado_turno.estado_confronto = BOT2_VENCEU;
+	else if(bot2->vida <= 0)
+		resultado_turno.estado_confronto = BOT1_VENCEU;
+	else
+		resultado_turno.estado_confronto = INACABADO;
+
+	return resultado_turno;
 }

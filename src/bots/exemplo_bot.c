@@ -11,7 +11,7 @@
  * processo decisório com base nos históricos de ação e no
  * estado atual do bot.
  *************************************************************/
-static Acao tomar_decisao(Bot bot, Historico hist_proprio, Historico hist_oponente, int turno) {
+static Acao tomar_decisao(Bot bot, Historico hist_proprio, Historico hist_oponente, unsigned short int turno) {
 	printf("Bot \"%s\" tomando decisao;\n", bot.nome);
 	if(turno % 2) return RECARGA;
 	else return ATAQUE;
