@@ -37,4 +37,16 @@ BotID simula_confronto(Bot *bot1, Bot *bot2);
  *************************************************************/
 ResultadoTurno simula_turno(Bot *bot1, Bot *bot2, Historico hist_bot1, Historico hist_bot2, unsigned short int num_turno);
 
+/**************************************************************
+ * Realiza os efeitos da ação de um bot contra um oponente, em
+ * casos de contra-ataque, também realiza o contra-ataque do
+ * oponente contra o próprio bot
+ *************************************************************/
+void realiza_acao(Bot *bot, Acao acao, Bot *oponente, Acao acao_oponente);
+
+/**************************************************************
+ * Nos retorna o estado de um confronto após um turno, o que
+ * efetivamente equivale a checar quais bots morreram ou não
+ *************************************************************/
+EstadoConfronto estado_confronto(short int vida_bot1, short int vida_bot2);
 #endif

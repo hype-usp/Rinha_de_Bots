@@ -1,7 +1,7 @@
 #ifndef TIPOS_H
 #define TIPOS_H
 
-#define MAX_TURNOS 30
+#define MAX_TURNOS 30       // Número máximo de turnos por confronto
 
 typedef unsigned short int BotID;
 
@@ -25,8 +25,10 @@ typedef struct {
 // Tipo representando o historico de ações de um bot
 typedef Acao Historico[MAX_TURNOS];
 
+typedef struct Bot Bot;
+
 // Tipo representando um ponteiro para uma função de tomada de decisão de um bot
-typedef Acao (*FuncaoDecisao)(struct aux, Historico, Historico, int);
+typedef Acao (*FuncaoDecisao)(const Bot *, Historico, Historico, int);
 
 // Tipo representando os estados possíveis de um confronto após um dado turno
 typedef enum {

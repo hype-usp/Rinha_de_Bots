@@ -5,16 +5,17 @@
 #include "../tipos.h"
 
 #define NUM_BOTS 25           // Número de bots na competição
+#define NOME_TAMANHO_MAX 64   // Tamanho máximo do nome de um bot e da equipe que criou o bot
 #define NUM_ACOES 7           // Número de ações possíveis
 #define VIDA_MAX 3            // Número máximo de vidas
 #define NUM_CURAS 3           // Número inicial de curas
 #define NUM_CONTRA_ATAQUES 3  // Número inicial de contra-ataques
 #define ENERGIA_INICIAL 0     // Quantidade inicial de energia
 #define CUSTO_ATQ_PESADO  2   // Quantas recargas custa um ataque pesado
-#define NOME_TAMANHO_MAX  64  // Tamanho máximo do nome de um bot e da equipe que criou o bot
+
 
 // Tipo representando um bot (jogador)
-typedef struct aux{
+struct Bot{
     // Propriedades para simulação
     BotID id;                       // ID do bot
     char nome[NOME_TAMANHO_MAX];    // Nome do bot
@@ -34,8 +35,7 @@ typedef struct aux{
     unsigned short int sucesso_defesas; // Total de defesas bem sucedidas
     unsigned int decisoes_tomadas;      // Total de decisões tomadas
     double tempo_decisao;               // Tempo médio para tomar uma decisão
-} Bot;
-
+};
 
 /**************************************************************
  * Função que recebe o nome de um bot e da equipe que o criou,
