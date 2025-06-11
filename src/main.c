@@ -34,8 +34,10 @@ int main(int argc, char** argv) {
     }
     printf("\nTotal de %zu bots prontos para a rinha!\n", num_bots);
 
+    // Ordena os bots da lista para que seus índices correspondam aos seus IDs
     qsort(lista_de_bots, num_bots, sizeof(Bot*), compara_bots_por_id);
 
+    // Que o melhor vença!
     inicia_simulacao(lista_de_bots, num_bots);
 
     return 0;

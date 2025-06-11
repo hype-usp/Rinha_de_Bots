@@ -40,26 +40,31 @@ BotID simula_combate(Bot *bot1, Bot *bot2) {
 		if(resultado_confronto == bot1->id) saldo_resultante++;
 		if(resultado_confronto == bot2->id) saldo_resultante--;
 	}
-	if(saldo_resultante > 0) return bot1->id;
-	if(saldo_resultante < 0) return bot2->id;
+	if(saldo_resultante > 0) {
+		printf("---------------------------------------\n"
+			   "%s VENCEU O COMBATE\n"
+			   "---------------------------------------\n", bot1->nome);
+		return bot1->id;
+	}
+	if(saldo_resultante < 0) {
+		printf("---------------------------------------\n"
+			   "%s VENCEU O COMBATE\n"
+			   "---------------------------------------\n", bot2->nome);
+		return bot2->id;
+	}
+	printf("----------------------\nEMPATE\n----------------------\n");
 	return EMPATE;
 }
 
 BotID simula_confronto(Bot *bot1, Bot *bot2) {
-	/**********************************************************
-	 * Restaurando o estado de cada bot para que eles fiquem
-	 * prontos para um novo confronto e iniciando as variáveis
-	 * de controle do confronto
-	 *********************************************************/
-	restaura_bot(bot1);
-	restaura_bot(bot2);
+	//iniciando as variáveis de controle do confronto
 	ResultadoTurno resultado_turno = {.estado_confronto = INACABADO};
 	Historico hist_bot1;
 	Historico hist_bot2;
 	unsigned short int turno_atual = 0;
 	/**********************************************************
 	 * Loop que simula os turnos do confronto até que haja
-	 * alguma morte ou o confronto chege no número máximo de
+	 * alguma morte ou o confronto chegue no número máximo de
 	 * turnos
 	 *********************************************************/
 	while(resultado_turno.estado_confronto == INACABADO) {
@@ -68,35 +73,52 @@ BotID simula_confronto(Bot *bot1, Bot *bot2) {
 		hist_bot2[turno_atual] = resultado_turno.acao_bot2;
 		turno_atual++;
 	}
+	/**********************************************************
+	 * Restaurando o estado de cada bot para que eles fiquem
+	 * prontos para o próximo confronto
+	 *********************************************************/
+	restaura_bot(bot1);
+	restaura_bot(bot2);
+	// Devolvendo o resultado final do confronto
 	if(resultado_turno.estado_confronto == BOT2_VENCEU) return bot2->id;
 	if(resultado_turno.estado_confronto == BOT1_VENCEU) return bot1->id;
 	return EMPATE;
 }
 
 ResultadoTurno simula_turno(Bot *bot1, Bot *bot2, Historico hist_bot1, Historico hist_bot2, unsigned short int turno) {
-	printf("Turno: %hu\n", turno);
 	ResultadoTurno resultado_turno;
 	// Checando se já passamos do limite máximo de turnos por confronto
 	if(turno >= MAX_TURNOS) {
 		resultado_turno.estado_confronto = EXCESSO_TURNOS;
 		return resultado_turno;
 	}
-	// Deixando os bots tomarem suas decisões, estas duas lihas são o coração do programa
+	/**********************************************************
+	 * Deixando os bots tomarem suas decisões, estas duas
+	 * próximas linhas são o coração do programa
+	 *********************************************************/
 	Acao acao_bot1 = bot1->tomar_decisao(bot1, hist_bot1, hist_bot2, turno);
 	Acao acao_bot2 = bot2->tomar_decisao(bot2, hist_bot2, hist_bot1, turno);
 	resultado_turno.acao_bot1 = acao_bot1;
 	resultado_turno.acao_bot2 = acao_bot2;
-	// Aplicando o efeito correspondente à ação do bot 1
+	/**********************************************************
+	 * Aplicando os efeitos correspondentes às ações de cada
+	 * bot, a ordem não é relevante
+	 *********************************************************/
 	realiza_acao(bot1, acao_bot1, bot2, acao_bot2);
-	// Aplicando o efeito correspondente à ação do bot 2
 	realiza_acao(bot2, acao_bot2, bot1, acao_bot1);
-
-	// Checando as outras condições de término de confronto
+	/**********************************************************
+	 * Checando as condições padrão de término de confronto. O
+	 * confronto apenas continua se o resultado for INACABADO
+	 *********************************************************/
 	resultado_turno.estado_confronto = estado_confronto(bot1->vida, bot2->vida);
 	return resultado_turno;
 }
 
 void realiza_acao(Bot *bot, Acao acao, Bot *oponente, Acao acao_oponente) {
+	/**********************************************************
+	 * Chamando as funções que aplicam o efeito de cada ação.
+	 * Se for o caso, também já aplica contra-ataques
+	 *********************************************************/
 	switch(acao) {
 		case RECARGA:
 			recarga(bot);
