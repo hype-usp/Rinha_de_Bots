@@ -1,7 +1,7 @@
 #ifndef TIPOS_H
 #define TIPOS_H
 
-#define TURNOS_MAX 30
+#define MAX_TURNOS 30       // Número máximo de turnos por confronto
 
 typedef unsigned short int BotID;
 
@@ -23,18 +23,27 @@ typedef struct {
 } KD;
 
 // Tipo representando o historico de ações de um bot
-typedef Acao Historico[TURNOS_MAX];
+typedef Acao Historico[MAX_TURNOS];
+
+typedef struct Bot Bot;
 
 // Tipo representando um ponteiro para uma função de tomada de decisão de um bot
-typedef Acao (*FuncaoDecisao)(struct aux, Historico, Historico, int);
+typedef Acao (*FuncaoDecisao)(const Bot *, const Bot *, Historico, Historico, int);
 
 // Tipo representando os estados possíveis de um confronto após um dado turno
 typedef enum {
-    INACABADO,     // Nenhum bot morreu ainda
-    BOT1_VENCEU,   // O bot 2 morreu
-    BOT2_VENCEU,   // O bot 1 morreu
-    AMBOS_MORRERAM // ... Ambos morreram
+    INACABADO,      // Nenhum bot morreu ainda
+    BOT1_VENCEU,    // O bot 2 morreu
+    BOT2_VENCEU,    // O bot 1 morreu
+    AMBOS_MORRERAM, // ... Ambos morreram
+    EXCESSO_TURNOS  // O número de turnos máximo por combate foi excedido
 } EstadoConfronto;
+
+typedef struct {
+    Acao acao_bot1;
+    Acao acao_bot2;
+    EstadoConfronto estado_confronto;
+} ResultadoTurno;
 
 /**************************************************************
  * Tipo que representa as estatísticas gerais da simulação, os
