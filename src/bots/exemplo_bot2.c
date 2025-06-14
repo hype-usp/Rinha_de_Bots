@@ -11,7 +11,7 @@
  * processo decisório com base nos históricos de ação e no
  * estado atual do bot.
  *************************************************************/
-static Acao tomar_decisao(const Bot *bot, Historico hist_proprio, Historico hist_oponente, unsigned short int turno) {
+static Acao tomar_decisao(const Bot *bot, const Bot *oponente, Historico hist_bot, Historico hist_oponente, unsigned short int turno) {
 	if((turno + 1) % 3) return RECARGA;
 	else return ATAQUE_PESADO;
 }

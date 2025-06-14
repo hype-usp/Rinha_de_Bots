@@ -20,6 +20,8 @@ Estatistica inicia_simulacao(Bot **bots, size_t num_bots) {
 		 *****************************************************/
 		for(int b2 = b1 + 1; b2 < (int)num_bots; b2++) {
 			BotID resultado_combate;
+			printf("--------------------------------------------\n");
+			printf("%s VS %s\n", bots[b1]->nome, bots[b2]->nome);
 			resultado_combate = simula_combate(bots[b1], bots[b2]);
 		}
 	}
@@ -41,18 +43,14 @@ BotID simula_combate(Bot *bot1, Bot *bot2) {
 		if(resultado_confronto == bot2->id) saldo_resultante--;
 	}
 	if(saldo_resultante > 0) {
-		printf("---------------------------------------\n"
-			   "%s VENCEU O COMBATE\n"
-			   "---------------------------------------\n", bot1->nome);
+		printf("%s VENCEU O COMBATE\n", bot1->nome);
 		return bot1->id;
 	}
 	if(saldo_resultante < 0) {
-		printf("---------------------------------------\n"
-			   "%s VENCEU O COMBATE\n"
-			   "---------------------------------------\n", bot2->nome);
+		printf("%s VENCEU O COMBATE\n", bot2->nome);
 		return bot2->id;
 	}
-	printf("----------------------\nEMPATE\n----------------------\n");
+	printf("EMPATE\n");
 	return EMPATE;
 }
 
@@ -96,10 +94,19 @@ ResultadoTurno simula_turno(Bot *bot1, Bot *bot2, Historico hist_bot1, Historico
 	 * Deixando os bots tomarem suas decisões, estas duas
 	 * próximas linhas são o coração do programa
 	 *********************************************************/
-	Acao acao_bot1 = bot1->tomar_decisao(bot1, hist_bot1, hist_bot2, turno);
-	Acao acao_bot2 = bot2->tomar_decisao(bot2, hist_bot2, hist_bot1, turno);
-	resultado_turno.acao_bot1 = acao_bot1;
-	resultado_turno.acao_bot2 = acao_bot2;
+	Acao acao_bot1 = bot1->tomar_decisao(bot1, bot2, hist_bot1, hist_bot2, turno);
+	Acao acao_bot2 = bot2->tomar_decisao(bot2, bot1, hist_bot2, hist_bot1, turno);
+	/**********************************************************
+	 * Validando as ações dos bots para ter certeza de que eles
+	 * não trapaceiem (mesmo que sem querer) e armazenando o
+	 * resultado.
+	 *********************************************************/
+	bool acao1_invalida = valida_acao(acao_bot1, bot1, hist_bot1, turno);
+	bool acao2_invalida = valida_acao(acao_bot2, bot2, hist_bot2, turno);
+	if(acao1_invalida) resultado_turno.acao_bot1 = VACILO;
+	else resultado_turno.acao_bot1 = acao_bot1;
+	if(acao2_invalida) resultado_turno.acao_bot2 = VACILO;
+	else resultado_turno.acao_bot2 = acao_bot2;
 	/**********************************************************
 	 * Aplicando os efeitos correspondentes às ações de cada
 	 * bot, a ordem não é relevante
@@ -125,11 +132,17 @@ void realiza_acao(Bot *bot, Acao acao, Bot *oponente, Acao acao_oponente) {
 			break;
 		case ATAQUE:
 			if(acao_oponente == CONTRA_ATAQUE) ataque(bot, acao); 
-			else ataque(oponente, acao_oponente);
+			else {
+				ataque(oponente, acao_oponente);
+				gasta_energia(bot, acao);
+			}
 			break;
 		case ATAQUE_PESADO:
 			if(acao_oponente == CONTRA_ATAQUE) ataque_pesado(bot, acao);
-			else ataque_pesado(oponente, acao_oponente);
+			else {
+				ataque_pesado(oponente, acao_oponente);
+				gasta_energia(bot, acao);
+			}
 			break;
 		case CURA:
 			cura(bot);

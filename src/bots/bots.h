@@ -24,7 +24,7 @@ struct Bot{
     short int vida;                 // Vida atual do bot [0, 3]
     short int energia;              // Energia atual do bot [0, inf]
     short int curas;                // Quantidade de curas restantes [0, 3]
-    short int contra_ataques;       // Quantidade de contra-ataques restantes [0, 3]
+    short int contra_ataques;       // Quantidade de contra-ataques restantes [0, 3]    
     FuncaoDecisao tomar_decisao;    // Ponteiro para uma função de tomada de decisão
 
     // Propriedades para colheita de dados

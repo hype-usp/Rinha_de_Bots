@@ -37,6 +37,11 @@ int main(int argc, char** argv) {
     // Ordena os bots da lista para que seus índices correspondam aos seus IDs
     qsort(lista_de_bots, num_bots, sizeof(Bot*), compara_bots_por_id);
 
+    for(int i = 0; i < (int)num_bots; i++) {
+        Bot *b = lista_de_bots[i];
+        printf("Bot #%d - %s da equipe %s\n", b->id, b->nome, b->equipe);
+    }
+
     // Que o melhor vença!
     inicia_simulacao(lista_de_bots, num_bots);
 

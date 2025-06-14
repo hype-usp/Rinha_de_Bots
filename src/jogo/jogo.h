@@ -2,6 +2,7 @@
 #define JOGO_H
 
 #include <stddef.h>
+#include <stdbool.h>
 #include "../tipos.h"
 #include "../bots/bots.h"
 #include "../estatisticas/estatisticas.h"
@@ -49,4 +50,5 @@ void realiza_acao(Bot *bot, Acao acao, Bot *oponente, Acao acao_oponente);
  * efetivamente equivale a checar quais bots morreram ou não
  *************************************************************/
 EstadoConfronto estado_confronto(short int vida_bot1, short int vida_bot2);
+
 #endif

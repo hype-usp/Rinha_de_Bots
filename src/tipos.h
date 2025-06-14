@@ -28,7 +28,7 @@ typedef Acao Historico[MAX_TURNOS];
 typedef struct Bot Bot;
 
 // Tipo representando um ponteiro para uma função de tomada de decisão de um bot
-typedef Acao (*FuncaoDecisao)(const Bot *, Historico, Historico, int);
+typedef Acao (*FuncaoDecisao)(const Bot *, const Bot *, Historico, Historico, int);
 
 // Tipo representando os estados possíveis de um confronto após um dado turno
 typedef enum {
