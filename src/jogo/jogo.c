@@ -5,7 +5,7 @@
 
 Estatistica inicia_simulacao(Bot **bots, size_t num_bots) {
 	Estatistica estatisticas;
-	inicializa_estatistica(&estatisticas);
+	inicializa_estatisticas(&estatisticas);
 
 	/**********************************************************
 	 * Loop externo: b1 é o ID do primeiro bot no combate.
@@ -140,27 +140,27 @@ EstadoConfronto estado_confronto(short int vida_bot1, short int vida_bot2) {
 
 void processa_resultado_combate(BotID resultado, Bot *bot1, Bot *bot2) {
 	if(resultado == EMPATE) {
-		bot1->VDE[bot2].empates++;
-		bot2->VDE[bot1].empates++;
-	} else if(resultado == bot1) {
-		bot1->VDE[bot2].vitorias++;
-		bot2->VDE[bot1].derrotas++;
+		bot1->VDEs[bot2->id].empates++;
+		bot2->VDEs[bot1->id].empates++;
+	} else if(resultado == bot1->id) {
+		bot1->VDEs[bot2->id].vitorias++;
+		bot2->VDEs[bot1->id].derrotas++;
 	} else {
-		bot2->VDE[bot1].vitorias++;
-		bot1->VDE[bot2].derrotas++;
+		bot2->VDEs[bot1->id].vitorias++;
+		bot1->VDEs[bot2->id].derrotas++;
 	}
 }
 
 void processa_resultado_confronto(BotID resultado, Bot *bot1, Bot *bot2) {
 	if(resultado == EMPATE) {
-		bot1->KD[bot2].mortes++;
-		bot2->KD[bot1].mortes++;
-	} else if(resultado == bot1) {
-		bot1->VDE[bot2].abates++;
-		bot2->VDE[bot1].mortes++;
+		bot1->KDs[bot2->id].mortes++;
+		bot2->KDs[bot1->id].mortes++;
+	} else if(resultado == bot1->id) {
+		bot1->KDs[bot2->id].abates++;
+		bot2->KDs[bot1->id].mortes++;
 	} else {
-		bot2->VDE[bot1].abates++;
-		bot1->VDE[bot2].mortes++;
+		bot2->KDs[bot1->id].abates++;
+		bot1->KDs[bot2->id].mortes++;
 	}
 }
 

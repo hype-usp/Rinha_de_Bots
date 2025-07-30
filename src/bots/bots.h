@@ -6,7 +6,6 @@
 
 #define NUM_BOTS 25           // Número de bots na competição
 #define NOME_TAMANHO_MAX 64   // Tamanho máximo do nome de um bot e da equipe que criou o bot
-#define NUM_ACOES 7           // Número de ações possíveis
 #define VIDA_MAX 3            // Número máximo de vidas
 #define NUM_CURAS 3           // Número inicial de curas
 #define NUM_CONTRA_ATAQUES 3  // Número inicial de contra-ataques
@@ -55,5 +54,10 @@ bool restaura_bot(Bot *bot);
  * por ele e seu oponente em um turno
  *************************************************************/
 void processa_acao(Bot *bot, Acao acao, Bot *oponente, Acao acao_oponente);
+
+/**************************************************************
+ * Função temporária/de debug, exibe as estatísticas de um bot
+ *************************************************************/
+void exibe_bots_stats(Bot **bots, size_t num_bots);
 
 #endif

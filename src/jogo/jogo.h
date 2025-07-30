@@ -49,7 +49,7 @@ EstadoConfronto estado_confronto(short int vida_bot1, short int vida_bot2);
  * estatística de cada bot envolvido. Ou seja, atualizando o
  * os VDEs dos dois bots de acordo com o resultado
  *************************************************************/
-void processa_resultado_combate(BotID resultado, Bot *bot1, Bot *bot2)
+void processa_resultado_combate(BotID resultado, Bot *bot1, Bot *bot2);
 
 /**************************************************************
  * Processa o resultado de um confronto alterando os atributos

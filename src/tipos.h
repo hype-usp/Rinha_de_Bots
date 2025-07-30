@@ -2,6 +2,7 @@
 #define TIPOS_H
 
 #define MAX_TURNOS 25 // Número máximo de turnos por confronto
+#define NUM_ACOES 7   // Número de ações possíveis
 
 typedef unsigned short int BotID;
 
@@ -70,6 +71,7 @@ typedef struct {
     long double p_ataques_pesados;
     long double m_acoes_usadas;
     long double m_turnos_por_confronto;
+    long double m_num_acoes[NUM_ACOES];
 } Estatistica;
 
 #endif
