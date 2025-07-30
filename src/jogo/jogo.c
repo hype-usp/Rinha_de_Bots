@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include "jogo.h"
 #include "../acoes/acoes.h"
+#include "../estatisticas/estatisticas.h"
 
 Estatistica inicia_simulacao(Bot **bots, size_t num_bots) {
-	//Estatistica estatisticas;
-	//inicializa_estatistica(&estatisticas);
+	Estatistica estatisticas;
+	inicializa_estatisticas(&estatisticas);
 
 	/**********************************************************
 	 * Loop externo: b1 é o ID do primeiro bot no combate.
 	 * b1 varia de 0 a num_bots
 	 *********************************************************/
-	for(int b1 = 0; b1 < (int)num_bots; b1++) {
+	for(BotID b1 = 0; b1 < (BotID)num_bots; b1++) {
 		/******************************************************
 		 * Loop interno: b2 é o ID do segundo bot no combate,
 		 * depende de b1 para não parearmos os mesmos bots duas
@@ -18,13 +19,16 @@ Estatistica inicia_simulacao(Bot **bots, size_t num_bots) {
 		 * bot12 x bot15 E bot15 x bot12
 		 * pois os dois são idênticos
 		 *****************************************************/
-		for(int b2 = b1 + 1; b2 < (int)num_bots; b2++) {
+		for(BotID b2 = b1 + 1; b2 < (BotID)num_bots; b2++) {
 			BotID resultado_combate;
 			printf("--------------------------------------------\n");
 			printf("%s VS %s\n", bots[b1]->nome, bots[b2]->nome);
 			resultado_combate = simula_combate(bots[b1], bots[b2]);
+			processa_resultado_combate(resultado_combate, bots[b1], bots[b2]);
 		}
 	}
+
+	return estatisticas;
 }
 
 BotID simula_combate(Bot *bot1, Bot *bot2) {
@@ -39,6 +43,7 @@ BotID simula_combate(Bot *bot1, Bot *bot2) {
 		// o resultado pode ser o ID do bot1, o ID do bot2 ou EMPATE
 		BotID resultado_confronto;
 		resultado_confronto = simula_confronto(bot1, bot2);
+		processa_resultado_confronto(resultado_confronto, bot1, bot2);
 		if(resultado_confronto == bot1->id) saldo_resultante++;
 		if(resultado_confronto == bot2->id) saldo_resultante--;
 	}
@@ -107,6 +112,7 @@ ResultadoTurno simula_turno(Bot *bot1, Bot *bot2, Historico hist_bot1, Historico
 	else resultado_turno.acao_bot1 = acao_bot1;
 	if(acao2_invalida) resultado_turno.acao_bot2 = VACILO;
 	else resultado_turno.acao_bot2 = acao_bot2;
+	processa_turno(bot1, acao_bot1, bot2, acao_bot2);
 	/**********************************************************
 	 * Aplicando os efeitos correspondentes às ações de cada
 	 * bot, a ordem não é relevante
@@ -121,37 +127,6 @@ ResultadoTurno simula_turno(Bot *bot1, Bot *bot2, Historico hist_bot1, Historico
 	return resultado_turno;
 }
 
-void realiza_acao(Bot *bot, Acao acao, Bot *oponente, Acao acao_oponente) {
-	/**********************************************************
-	 * Chamando as funções que aplicam o efeito de cada ação.
-	 * Se for o caso, também já aplica contra-ataques
-	 *********************************************************/
-	switch(acao) {
-		case RECARGA:
-			recarga(bot);
-			break;
-		case ATAQUE:
-			if(acao_oponente == CONTRA_ATAQUE) ataque(bot, acao); 
-			else {
-				ataque(oponente, acao_oponente);
-				gasta_energia(bot, acao);
-			}
-			break;
-		case ATAQUE_PESADO:
-			if(acao_oponente == CONTRA_ATAQUE) ataque_pesado(bot, acao);
-			else {
-				ataque_pesado(oponente, acao_oponente);
-				gasta_energia(bot, acao);
-			}
-			break;
-		case CURA:
-			cura(bot);
-			break;
-		default:
-			break;
-	}
-}
-
 EstadoConfronto estado_confronto(short int vida_bot1, short int vida_bot2) {
 	if(vida_bot1 <= 0 && vida_bot2 <= 0)
 		return AMBOS_MORRERAM;
@@ -161,4 +136,35 @@ EstadoConfronto estado_confronto(short int vida_bot1, short int vida_bot2) {
 		return BOT1_VENCEU;
 	else
 		return INACABADO;
+}
+
+void processa_resultado_combate(BotID resultado, Bot *bot1, Bot *bot2) {
+	if(resultado == EMPATE) {
+		bot1->VDEs[bot2->id].empates++;
+		bot2->VDEs[bot1->id].empates++;
+	} else if(resultado == bot1->id) {
+		bot1->VDEs[bot2->id].vitorias++;
+		bot2->VDEs[bot1->id].derrotas++;
+	} else {
+		bot2->VDEs[bot1->id].vitorias++;
+		bot1->VDEs[bot2->id].derrotas++;
+	}
+}
+
+void processa_resultado_confronto(BotID resultado, Bot *bot1, Bot *bot2) {
+	if(resultado == EMPATE) {
+		bot1->KDs[bot2->id].mortes++;
+		bot2->KDs[bot1->id].mortes++;
+	} else if(resultado == bot1->id) {
+		bot1->KDs[bot2->id].abates++;
+		bot2->KDs[bot1->id].mortes++;
+	} else {
+		bot2->KDs[bot1->id].abates++;
+		bot1->KDs[bot2->id].mortes++;
+	}
+}
+
+void processa_turno(Bot *bot1, Acao acao_bot1, Bot *bot2, Acao acao_bot2) {
+	processa_acao(bot1, acao_bot1, bot2, acao_bot2);
+	processa_acao(bot2, acao_bot2, bot1, acao_bot1);
 }

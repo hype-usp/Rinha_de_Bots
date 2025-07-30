@@ -1,7 +1,8 @@
 #ifndef TIPOS_H
 #define TIPOS_H
 
-#define MAX_TURNOS 30       // Número máximo de turnos por confronto
+#define MAX_TURNOS 25 // Número máximo de turnos por confronto
+#define NUM_ACOES 7   // Número de ações possíveis
 
 typedef unsigned short int BotID;
 
@@ -18,9 +19,16 @@ typedef enum {
 
 // Tipo representando o número de abates e mortes (Kills/Deaths) de um bot
 typedef struct {
-    unsigned short int abates;
-    unsigned short int mortes;
+    unsigned int abates;
+    unsigned int mortes;
 } KD;
+
+// Tipo representando o número de combates vencidos, perdidos e empatados de um bot 
+typedef struct {
+    unsigned int vitorias;
+    unsigned int derrotas;
+    unsigned int empates;
+} VDE;
 
 // Tipo representando o historico de ações de um bot
 typedef Acao Historico[MAX_TURNOS];
@@ -47,16 +55,23 @@ typedef struct {
 
 /**************************************************************
  * Tipo que representa as estatísticas gerais da simulação, os
- * atributos possuem os seguintes sufixos com os seguintes
+ * atributos possuem os seguintes prefixos com os seguintes
  * significados:
- * m = "média de"
- * p = "proporção de"
  * t = "total de"
+ * p = "proporção de"
+ * m = "média de"
  *************************************************************/
 typedef struct {
-	long double m_turnos_por_confronto;
-	long double p_boas_defesas;
+    int t_combates;
+	int t_confrontos;
+    int t_turnos;
 	int t_empates;
+	long double p_boas_defesas;
+    long double p_bons_contra_ataques;
+    long double p_ataques_pesados;
+    long double m_acoes_usadas;
+    long double m_turnos_por_confronto;
+    long double m_num_acoes[NUM_ACOES];
 } Estatistica;
 
 #endif

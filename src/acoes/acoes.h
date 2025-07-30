@@ -31,4 +31,11 @@ void gasta_energia(Bot *bot, Acao acao);
  *************************************************************/
 bool valida_acao(Acao acao, const Bot *bot, Historico hist, unsigned short int turno);
 
+/**************************************************************
+ * Realiza os efeitos da ação de um bot contra um oponente, em
+ * casos de contra-ataque, também realiza o contra-ataque do
+ * oponente contra o próprio bot
+ *************************************************************/
+void realiza_acao(Bot *bot, Acao acao, Bot *oponente, Acao acao_oponente);
+
 #endif
