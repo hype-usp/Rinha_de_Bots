@@ -13,9 +13,20 @@ void inicializa_bot(Bot *bot, const char *nome, const char *equipe, FuncaoDecisa
 	bot->contra_ataques = NUM_CONTRA_ATAQUES,
 	bot->tomar_decisao = f;
 
+	for(int i = 0; i < NUM_BOTS; i++) {
+		bot->KDs[i].abates = 0;
+		bot->KDs[i].mortes = 0;
+		bot->VDEs[i].vitorias = 0;
+		bot->VDEs[i].derrotas = 0;
+		bot->VDEs[i].empates = 0;
+
+		if(i < NUM_ACOES)
+			bot->num_acoes[i] = 0;
+	}
+
 	bot->dano_tomado = 0;
-	bot->sucesso_CA = 0;
-	bot->sucesso_defesas = 0;
+	bot->bons_contra_ataques = 0;
+	bot->boas_defesas = 0;
 	bot->decisoes_tomadas = 0;
 	bot->tempo_decisao = 0.0;	
 }
@@ -29,4 +40,24 @@ bool restaura_bot(Bot *bot) {
 	bot->contra_ataques = NUM_CONTRA_ATAQUES;
 	
 	return false;
+}
+
+void processa_acao(Bot *bot, Acao acao, Bot *oponente, Acao acao_oponente) {
+	bot->num_acoes[acao]++;
+	bot->decisoes_tomadas++;
+
+	if(acao_oponente == ATAQUE) {
+		if(acao != DEFESA && acao != CONTRA_ATAQUE)
+			bot->dano_tomado += 1;
+	} else if(acao_oponente == ATAQUE_PESADO) {
+		if(acao == DEFESA) bot->dano_tomado += 1;
+		else if(acao != CONTRA_ATAQUE) bot->dano_tomado += 3;
+	}
+
+	if(acao_oponente == ATAQUE || acao_oponente == ATAQUE_PESADO) {
+		if(acao == CONTRA_ATAQUE)
+			bot->bons_contra_ataques++;
+		if(acao == DEFESA)
+			bot->boas_defesas++;
+	}
 }

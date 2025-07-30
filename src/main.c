@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "tipos.h"
 #include "bots/bots.h"
 #include "jogo/jogo.h"
+#include "estatisticas/estatisticas.h"
 
 /**************************************************************
  * Compilação - rode o comando:
@@ -43,7 +45,7 @@ int main(int argc, char** argv) {
     }
 
     // Que o melhor vença!
-    inicia_simulacao(lista_de_bots, num_bots);
+    Estatistica estatisticas = inicia_simulacao(lista_de_bots, num_bots);
 
     return 0;
 }

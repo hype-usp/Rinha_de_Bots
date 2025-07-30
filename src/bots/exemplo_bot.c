@@ -29,4 +29,3 @@ static void __attribute__((constructor)) registrar_bot(void) {
 	 *********************************************************/
     inicializa_bot(&bot, "Pistoleiro Maluco", "Burrice Natural", (FuncaoDecisao)&tomar_decisao);
 }
-
