@@ -47,7 +47,19 @@ int main(int argc, char** argv) {
 
     // Que o melhor vença!
     Estatistica estatisticas = inicia_simulacao(lista_de_bots, num_bots);
+    
+    // Mostrando as estatísticas de cada bot
     exibe_bots_stats(lista_de_bots, num_bots);
+    
+    // Mostrando as estatísticas gerais da rinha
+    calcula_t_empates(&estatisticas, lista_de_bots, num_bots);
+    calcula_p_boas_defesas(&estatisticas, lista_de_bots, num_bots);
+    calcula_p_bons_contra_ataques(&estatisticas, lista_de_bots, num_bots);
+    calcula_p_ataques_pesados(&estatisticas, lista_de_bots, num_bots);
+    calcula_p_boas_defesas(&estatisticas, lista_de_bots, num_bots);
+    calcula_m_num_acoes(&estatisticas, lista_de_bots, num_bots);
+    calcula_m_turnos_por_confronto(&estatisticas);
+    gerar_relatorio(&estatisticas);
 
     return 0;
 }

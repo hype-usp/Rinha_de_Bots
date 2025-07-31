@@ -20,10 +20,11 @@ Estatistica inicia_simulacao(Bot **bots, size_t num_bots) {
 		 * pois os dois são idênticos
 		 *****************************************************/
 		for(BotID b2 = b1 + 1; b2 < (BotID)num_bots; b2++) {
+			incrementa_t_combates(&estatisticas);
 			BotID resultado_combate;
 			printf("--------------------------------------------\n");
 			printf("%s VS %s\n", bots[b1]->nome, bots[b2]->nome);
-			resultado_combate = simula_combate(bots[b1], bots[b2]);
+			resultado_combate = simula_combate(bots[b1], bots[b2], &estatisticas);
 			processa_resultado_combate(resultado_combate, bots[b1], bots[b2]);
 		}
 	}
@@ -31,7 +32,7 @@ Estatistica inicia_simulacao(Bot **bots, size_t num_bots) {
 	return estatisticas;
 }
 
-BotID simula_combate(Bot *bot1, Bot *bot2) {
+BotID simula_combate(Bot *bot1, Bot *bot2, Estatistica *estatisticas) {
 	/**********************************************************
 	 * O saldo resultante acabará:
 	 * positivo se o bot 1 vencer
@@ -40,9 +41,10 @@ BotID simula_combate(Bot *bot1, Bot *bot2) {
 	 *********************************************************/
 	short int saldo_resultante = 0;
 	for(int confronto = 1; confronto <= CONFRONTOS_POR_COMBATE; confronto++) {
+		incrementa_t_confrontos(estatisticas);
 		// o resultado pode ser o ID do bot1, o ID do bot2 ou EMPATE
 		BotID resultado_confronto;
-		resultado_confronto = simula_confronto(bot1, bot2);
+		resultado_confronto = simula_confronto(bot1, bot2, estatisticas);
 		processa_resultado_confronto(resultado_confronto, bot1, bot2);
 		if(resultado_confronto == bot1->id) saldo_resultante++;
 		if(resultado_confronto == bot2->id) saldo_resultante--;
@@ -59,7 +61,7 @@ BotID simula_combate(Bot *bot1, Bot *bot2) {
 	return EMPATE;
 }
 
-BotID simula_confronto(Bot *bot1, Bot *bot2) {
+BotID simula_confronto(Bot *bot1, Bot *bot2, Estatistica *estatisticas) {
 	//iniciando as variáveis de controle do confronto
 	ResultadoTurno resultado_turno = {.estado_confronto = INACABADO};
 	Historico hist_bot1;
@@ -71,6 +73,7 @@ BotID simula_confronto(Bot *bot1, Bot *bot2) {
 	 * turnos
 	 *********************************************************/
 	while(resultado_turno.estado_confronto == INACABADO) {
+		incrementa_t_turnos(estatisticas);
 		resultado_turno = simula_turno(bot1, bot2, hist_bot1, hist_bot2, turno_atual);
 		hist_bot1[turno_atual] = resultado_turno.acao_bot1;
 		hist_bot2[turno_atual] = resultado_turno.acao_bot2;
