@@ -16,7 +16,6 @@
  * estado atual do bot.
  *************************************************************/
 static Acao tomar_decisao(const Bot *bot, const Bot *oponente, Historico hist_bot, Historico hist_oponente, unsigned short int turno) {
-	srand(time(NULL));
 	int r = rand() % 6;
 	if(r == 1) {
 		if(!valida_acao(ATAQUE, bot, hist_bot, turno))

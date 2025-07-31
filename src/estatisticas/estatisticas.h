@@ -35,5 +35,5 @@ void calcula_m_num_acoes(Estatistica *estatistica, Bot **bots, size_t num_bots);
 void calcula_m_turnos_por_confronto(Estatistica *estatistica);
 
 // Cria um arquivo chamado stats_gerais.txt e escreve nele um breve relatório da simulação
-void gerar_relatorio(Estatistica *estatistica);
+void gerar_relatorio(Estatistica *estatistica, size_t num_bots);
 #endif

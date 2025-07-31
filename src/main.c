@@ -45,6 +45,8 @@ int main() {
         printf("Bot #%d - %s da equipe %s\n", b->id, b->nome, b->equipe);
     }
 
+    // Setando a seed do RNG
+    srand(time(NULL));
     // Que o melhor vença!
     Estatistica estatisticas = inicia_simulacao(lista_de_bots, num_bots);
     
@@ -59,7 +61,7 @@ int main() {
     calcula_p_boas_defesas(&estatisticas, lista_de_bots, num_bots);
     calcula_m_num_acoes(&estatisticas, lista_de_bots, num_bots);
     calcula_m_turnos_por_confronto(&estatisticas);
-    gerar_relatorio(&estatisticas);
+    gerar_relatorio(&estatisticas, num_bots);
 
     return 0;
 }

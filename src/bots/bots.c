@@ -65,7 +65,7 @@ void processa_acao(Bot *bot, Acao acao, Acao acao_oponente) {
 void exibe_bots_stats(Bot **bots, size_t num_bots) {
 		printf("\n");
 	for(size_t i = 0; i < num_bots; i++) {
-		printf("--------- Estatísticas do %s -----------\n", bots[i]->nome);
+		printf("\n--------- Estatísticas do %s -----------\n", bots[i]->nome);
 		printf("dano tomado: %d\n", bots[i]->dano_tomado);
 		printf("bons contra-ataques: %d\n", bots[i]->bons_contra_ataques);
 		printf("boas defesas: %d\n", bots[i]->boas_defesas);

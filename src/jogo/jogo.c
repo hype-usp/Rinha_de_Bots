@@ -49,6 +49,7 @@ BotID simula_combate(Bot *bot1, Bot *bot2, Estatistica *estatisticas) {
 		if(resultado_confronto == bot1->id) saldo_resultante++;
 		if(resultado_confronto == bot2->id) saldo_resultante--;
 	}
+
 	if(saldo_resultante > 0) {
 		printf("%s VENCEU O COMBATE\n", bot1->nome);
 		return bot1->id;
@@ -73,8 +74,9 @@ BotID simula_confronto(Bot *bot1, Bot *bot2, Estatistica *estatisticas) {
 	 * turnos
 	 *********************************************************/
 	while(resultado_turno.estado_confronto == INACABADO) {
-		incrementa_t_turnos(estatisticas);
 		resultado_turno = simula_turno(bot1, bot2, hist_bot1, hist_bot2, turno_atual);
+		if(resultado_turno.estado_confronto != EXCESSO_TURNOS)
+			incrementa_t_turnos(estatisticas);
 		hist_bot1[turno_atual] = resultado_turno.acao_bot1;
 		hist_bot2[turno_atual] = resultado_turno.acao_bot2;
 		turno_atual++;
@@ -115,13 +117,13 @@ ResultadoTurno simula_turno(Bot *bot1, Bot *bot2, Historico hist_bot1, Historico
 	else resultado_turno.acao_bot1 = acao_bot1;
 	if(acao2_invalida) resultado_turno.acao_bot2 = VACILO;
 	else resultado_turno.acao_bot2 = acao_bot2;
-	processa_turno(bot1, acao_bot1, bot2, acao_bot2);
 	/**********************************************************
 	 * Aplicando os efeitos correspondentes às ações de cada
 	 * bot, a ordem não é relevante
 	 *********************************************************/
 	realiza_acao(bot1, acao_bot1, bot2, acao_bot2);
 	realiza_acao(bot2, acao_bot2, bot1, acao_bot1);
+	processa_turno(bot1, acao_bot1, bot2, acao_bot2);
 	/**********************************************************
 	 * Checando as condições padrão de término de confronto. O
 	 * confronto apenas continua se o resultado for INACABADO
@@ -156,8 +158,9 @@ void processa_resultado_combate(BotID resultado, Bot *bot1, Bot *bot2) {
 
 void processa_resultado_confronto(BotID resultado, Bot *bot1, Bot *bot2) {
 	if(resultado == EMPATE) {
-		bot1->KDs[bot2->id].mortes++;
-		bot2->KDs[bot1->id].mortes++;
+		// Se a vida deles está > 0 então o empate foi por passar do limite de turnos, e não por ambos morrerem ao mesmo tempo
+		if(bot1->vida <= 0) bot1->KDs[bot2->id].mortes++;
+		if(bot2->vida <= 0) bot2->KDs[bot1->id].mortes++;
 	} else if(resultado == bot1->id) {
 		bot1->KDs[bot2->id].abates++;
 		bot2->KDs[bot1->id].mortes++;
