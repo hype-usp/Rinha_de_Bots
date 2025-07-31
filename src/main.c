@@ -23,7 +23,7 @@ int compara_bots_por_id(const void* a, const void* b) {
     return (botA->id - botB->id);
 }
 
-int main(int argc, char** argv) {
+int main() {
     // Calcula quantos bots foram registrados na seção.
     const size_t num_bots = (size_t)(((char *)&__stop_bots - (char *)&__start_bots) / sizeof(Bot));
     

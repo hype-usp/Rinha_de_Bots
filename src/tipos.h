@@ -66,10 +66,9 @@ typedef struct {
 	int t_confrontos;
     int t_turnos;
 	int t_empates;
-	long double p_boas_defesas;
-    long double p_bons_contra_ataques;
-    long double p_ataques_pesados;
-    long double m_acoes_usadas;
+	long double p_boas_defesas;         // defesas que impediram algum dano
+    long double p_bons_contra_ataques;  // contra ataques que causaram dano
+    long double p_ataques_pesados;      // proporção de ataques pesados em relação ao total de ataques
     long double m_turnos_por_confronto;
     long double m_num_acoes[NUM_ACOES];
 } Estatistica;
