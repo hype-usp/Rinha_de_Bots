@@ -87,7 +87,7 @@ void calcula_m_turnos_por_confronto(Estatistica *estatistica) {
 
 void gerar_relatorio(Estatistica *estatistica) {
 	FILE *relatorio = fopen("stats_gerais.txt", "w");
-	fputs("RELATÓRIO: ESTATÍSTICAS GERIAS DA RINHA\n", relatorio);
+	fputs("RELATÓRIO: ESTATÍSTICAS GERAIS DA RINHA\n", relatorio);
 	fprintf(relatorio, "Número de combates: %d\n", estatistica->t_combates);
 	fprintf(relatorio, "Número de confrontos: %d\n", estatistica->t_confrontos);
 	fprintf(relatorio, "Número de turnos: %d\n", estatistica->t_turnos);

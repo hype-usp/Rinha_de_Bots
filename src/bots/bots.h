@@ -53,7 +53,7 @@ bool restaura_bot(Bot *bot);
  * Atualiza as estatísticas do bot com base nas ações tomadas
  * por ele e seu oponente em um turno
  *************************************************************/
-void processa_acao(Bot *bot, Acao acao, Bot *oponente, Acao acao_oponente);
+void processa_acao(Bot *bot, Acao acao, Acao acao_oponente);
 
 /**************************************************************
  * Função temporária/de debug, exibe as estatísticas de um bot

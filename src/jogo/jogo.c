@@ -168,6 +168,6 @@ void processa_resultado_confronto(BotID resultado, Bot *bot1, Bot *bot2) {
 }
 
 void processa_turno(Bot *bot1, Acao acao_bot1, Bot *bot2, Acao acao_bot2) {
-	processa_acao(bot1, acao_bot1, bot2, acao_bot2);
-	processa_acao(bot2, acao_bot2, bot1, acao_bot1);
+	processa_acao(bot1, acao_bot1, acao_bot2);
+	processa_acao(bot2, acao_bot2, acao_bot1);
 }

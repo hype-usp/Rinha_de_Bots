@@ -42,7 +42,7 @@ bool restaura_bot(Bot *bot) {
 	return false;
 }
 
-void processa_acao(Bot *bot, Acao acao, Bot *oponente, Acao acao_oponente) {
+void processa_acao(Bot *bot, Acao acao, Acao acao_oponente) {
 	bot->num_acoes[acao]++;
 	bot->decisoes_tomadas++;
 
@@ -64,13 +64,13 @@ void processa_acao(Bot *bot, Acao acao, Bot *oponente, Acao acao_oponente) {
 
 void exibe_bots_stats(Bot **bots, size_t num_bots) {
 		printf("\n");
-	for(int i = 0; i < num_bots; i++) {
+	for(size_t i = 0; i < num_bots; i++) {
 		printf("--------- Estatísticas do %s -----------\n", bots[i]->nome);
 		printf("dano tomado: %d\n", bots[i]->dano_tomado);
 		printf("bons contra-ataques: %d\n", bots[i]->bons_contra_ataques);
 		printf("boas defesas: %d\n", bots[i]->boas_defesas);
 		printf("decisoes tomadas: %d\n", bots[i]->decisoes_tomadas);
-		for(int j = 0; j < num_bots; j++) {
+		for(size_t j = 0; j < num_bots; j++) {
 			if(i == j) continue;
 			printf("KD contra %s: %d/%d\n", bots[j]->nome, bots[i]->KDs[j].abates, bots[i]->KDs[j].mortes);
 			printf("VDE contra %s: %d/%d/%d\n", bots[j]->nome, bots[i]->VDEs[j].vitorias, bots[i]->VDEs[j].derrotas, bots[i]->VDEs[j].empates);
