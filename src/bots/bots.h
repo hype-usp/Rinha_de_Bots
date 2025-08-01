@@ -34,7 +34,7 @@ struct Bot{
     unsigned int bons_contra_ataques;  // Total de contra ataques bem sucedidos
     unsigned int boas_defesas;         // Total de defesas bem sucedidas
     unsigned int decisoes_tomadas;     // Total de decisões tomadas
-    double tempo_decisao;              // Tempo médio para tomar uma decisão
+    double tempo_decisao_total;        // Tempo total para decisões
 };
 
 /**************************************************************
