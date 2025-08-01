@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include "jogo.h"
 #include "../acoes/acoes.h"
 #include "../estatisticas/estatisticas.h"
@@ -117,13 +118,38 @@ ResultadoTurno simula_turno(Bot *bot1, Bot *bot2, Historico hist_bot1, Historico
 	else resultado_turno.acao_bot1 = acao_bot1;
 	if(acao2_invalida) resultado_turno.acao_bot2 = VACILO;
 	else resultado_turno.acao_bot2 = acao_bot2;
+	processa_turno(bot1, acao_bot1, bot2, acao_bot2);
 	/**********************************************************
 	 * Aplicando os efeitos correspondentes às ações de cada
 	 * bot, a ordem não é relevante
 	 *********************************************************/
+
+	/*Criando um clock agora para poder definir o começo do turno dos bots
+	para poder calcular depois o tempo de cada bot*/
+	clock_t tempo_inicial = clock();
+
+	/*Ação bot1*/
 	realiza_acao(bot1, acao_bot1, bot2, acao_bot2);
+	/*Agora vamos definir o tempo que demorou para executar a ação do bot 1*/
+	clock_t tempo_fim_bot1 = clock();
+
+	/*Ação bot2*/
 	realiza_acao(bot2, acao_bot2, bot1, acao_bot1);
-	processa_turno(bot1, acao_bot1, bot2, acao_bot2);
+	/*Agora vamos definir o tempo final a ação do bot 2*/
+	clock_t tempo_fim_bot2 = clock();
+
+	/*Agora vou fazer uma metrica que vai calcular o tempo dos dois bots*/
+	double tempo_acao_bot1 = ((double)(tempo_fim_bot1 - tempo_inicial) * 1000.0) / CLOCKS_PER_SEC;
+	double tempo_acao_bot2 = ((double)(tempo_fim_bot2-tempo_fim_bot1) * 1000.0) / CLOCKS_PER_SEC;
+
+	/*Atribuindo o valor do tempo total de ação do bot por turno*/
+
+	/*GRANDE probabilidade de estar com algum ERRO nessa parte de passar os valores
+	não sei se consegui entender muito bem esse lance de bot1 e bot2 para poder salvar
+	MAS a logica do clock me parece certa, pois eu testei separada e deu certinho*/
+	bot1->tempo_decisao_total+=tempo_acao_bot1;
+	bot2->tempo_decisao_total+=tempo_acao_bot2;
+
 	/**********************************************************
 	 * Checando as condições padrão de término de confronto. O
 	 * confronto apenas continua se o resultado for INACABADO

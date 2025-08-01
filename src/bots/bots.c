@@ -28,7 +28,7 @@ void inicializa_bot(Bot *bot, const char *nome, const char *equipe, FuncaoDecisa
 	bot->bons_contra_ataques = 0;
 	bot->boas_defesas = 0;
 	bot->decisoes_tomadas = 0;
-	bot->tempo_decisao = 0.0;	
+	bot->tempo_decisao_total = 0.0;	
 }
 
 bool restaura_bot(Bot *bot) {
@@ -70,6 +70,7 @@ void exibe_bots_stats(Bot **bots, size_t num_bots) {
 		printf("bons contra-ataques: %d\n", bots[i]->bons_contra_ataques);
 		printf("boas defesas: %d\n", bots[i]->boas_defesas);
 		printf("decisoes tomadas: %d\n", bots[i]->decisoes_tomadas);
+		printf("Tempo médio por decisao: %.7fMs\n", bots[i]->tempo_decisao_total/bots[i]->decisoes_tomadas);
 		for(size_t j = 0; j < num_bots; j++) {
 			if(i == j) continue;
 			printf("KD contra %s: %d/%d\n", bots[j]->nome, bots[i]->KDs[j].abates, bots[i]->KDs[j].mortes);

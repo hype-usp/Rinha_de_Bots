@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h> 
 #include "tipos.h"
 #include "bots/bots.h"
 #include "jogo/jogo.h"
