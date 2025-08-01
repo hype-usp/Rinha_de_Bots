@@ -70,11 +70,6 @@ void exibe_bots_stats(Bot **bots, size_t num_bots) {
 		printf("bons contra-ataques: %d\n", bots[i]->bons_contra_ataques);
 		printf("boas defesas: %d\n", bots[i]->boas_defesas);
 		printf("decisoes tomadas: %d\n", bots[i]->decisoes_tomadas);
-		/*Quando eu fiz alguns testes deu valores diferente, não sei se é normal, por conta da aleatoriedade dos bots,
-		ou se algum valor meu tá virando lixo e bugando a conta. (Fiz dessa forma, pois quando eu estava
-		tentando criar mais alguma coisa dentro do struct de bot para salvar dava um bug insano, acho que 
-		é aquilo de bit que o progama tenta arredondar)*/
-		//Coloquei isso tudo de casa para poder testar no olho mesmo se tá tudo certo, em teoria
 		printf("Tempo médio por decisao: %.7fMs\n", bots[i]->tempo_decisao_total/bots[i]->decisoes_tomadas);
 		for(size_t j = 0; j < num_bots; j++) {
 			if(i == j) continue;
