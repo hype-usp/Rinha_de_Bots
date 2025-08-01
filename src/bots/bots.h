@@ -6,7 +6,6 @@
 
 #define NUM_BOTS 25           // Número de bots na competição
 #define NOME_TAMANHO_MAX 64   // Tamanho máximo do nome de um bot e da equipe que criou o bot
-#define NUM_ACOES 7           // Número de ações possíveis
 #define VIDA_MAX 3            // Número máximo de vidas
 #define NUM_CURAS 3           // Número inicial de curas
 #define NUM_CONTRA_ATAQUES 3  // Número inicial de contra-ataques
@@ -28,13 +27,16 @@ struct Bot{
     FuncaoDecisao tomar_decisao;    // Ponteiro para uma função de tomada de decisão
 
     // Propriedades para colheita de dados
-    KD KDs[NUM_BOTS];                   // Número de abates e mortes do bot por oponente
-    unsigned int num_acoes[NUM_ACOES];  // Total de vezes que cada ação foi realizada pelo bot ao longo da simulação
-    unsigned int dano_tomado;           // Total de dano que o bot tomou ao longo da simulação
-    unsigned short int sucesso_CA;      // Total de contra ataques bem sucedidos
-    unsigned short int sucesso_defesas; // Total de defesas bem sucedidas
-    unsigned int decisoes_tomadas;      // Total de decisões tomadas
-    double tempo_decisao;               // Tempo médio para tomar uma decisão
+    KD KDs[NUM_BOTS];                  // Número de abates e mortes por oponente
+    VDE VDEs[NUM_BOTS];                // Número de vitórias, derrotas e empates por oponente
+    unsigned int num_acoes[NUM_ACOES]; // Total de vezes que cada ação foi realizada pelo bot ao longo da simulação
+    unsigned int dano_tomado;          // Total de dano que o bot tomou ao longo da simulação
+    unsigned int bons_contra_ataques;  // Total de contra ataques bem sucedidos
+    unsigned int boas_defesas;         // Total de defesas bem sucedidas
+    unsigned int decisoes_tomadas;     // Total de decisões tomadas
+    
+    /*Alterei o nome só para facilitar um pouco a vida*/
+    double tempo_decisao_total;        // Tempo total para decisões
 };
 
 /**************************************************************
@@ -48,5 +50,16 @@ void inicializa_bot(Bot *bot, const char *nome, const char *equipe, FuncaoDecisa
  * confronto. Retorna true se houver algum erro
  *************************************************************/
 bool restaura_bot(Bot *bot);
+
+/**************************************************************
+ * Atualiza as estatísticas do bot com base nas ações tomadas
+ * por ele e seu oponente em um turno
+ *************************************************************/
+void processa_acao(Bot *bot, Acao acao, Acao acao_oponente);
+
+/**************************************************************
+ * Função temporária/de debug, exibe as estatísticas de um bot
+ *************************************************************/
+void exibe_bots_stats(Bot **bots, size_t num_bots);
 
 #endif

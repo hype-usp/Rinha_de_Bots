@@ -61,3 +61,34 @@ bool valida_acao(Acao acao, const Bot *bot, Historico hist, unsigned short int t
 			return false;
 	}
 }
+
+void realiza_acao(Bot *bot, Acao acao, Bot *oponente, Acao acao_oponente) {
+	/**********************************************************
+	 * Chamando as funções que aplicam o efeito de cada ação.
+	 * Se for o caso, também já aplica contra-ataques
+	 *********************************************************/
+	switch(acao) {
+		case RECARGA:
+			recarga(bot);
+			break;
+		case ATAQUE:
+			if(acao_oponente == CONTRA_ATAQUE) ataque(bot, acao); 
+			else {
+				ataque(oponente, acao_oponente);
+				gasta_energia(bot, acao);
+			}
+			break;
+		case ATAQUE_PESADO:
+			if(acao_oponente == CONTRA_ATAQUE) ataque_pesado(bot, acao);
+			else {
+				ataque_pesado(oponente, acao_oponente);
+				gasta_energia(bot, acao);
+			}
+			break;
+		case CURA:
+			cura(bot);
+			break;
+		default:
+			break;
+	}
+}

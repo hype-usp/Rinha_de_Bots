@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "tipos.h"
 #include "bots/bots.h"
 #include "jogo/jogo.h"
+#include "estatisticas/estatisticas.h"
 
 /**************************************************************
  * Compilação - rode o comando:
@@ -21,21 +23,22 @@ int compara_bots_por_id(const void* a, const void* b) {
     return (botA->id - botB->id);
 }
 
-int main(int argc, char** argv) {
+int main() {
     // Calcula quantos bots foram registrados na seção.
-    const size_t num_bots = (size_t)(&__stop_bots - &__start_bots);
+    const size_t num_bots = (size_t)(((char *)&__stop_bots - (char *)&__start_bots) / sizeof(Bot));
     
     // Cria nossa lista de ponteiros para os bots.
     Bot *lista_de_bots[num_bots];
 
-    // Itera pelos bots na seção de memória e preenche a lista.
-    for (size_t i = 0; i < num_bots; ++i) {
-        lista_de_bots[i] = &__start_bots + i;
+    for (size_t i = 0; i < num_bots; i++) {
+        lista_de_bots[i] = (Bot *)((char *)&__start_bots + (i * (sizeof(Bot) + 16)));
     }
+
     printf("\nTotal de %zu bots prontos para a rinha!\n", num_bots);
 
+
     // Ordena os bots da lista para que seus índices correspondam aos seus IDs
-    qsort(lista_de_bots, num_bots, sizeof(Bot*), compara_bots_por_id);
+    qsort(lista_de_bots, num_bots, sizeof(Bot *), compara_bots_por_id);
 
     for(int i = 0; i < (int)num_bots; i++) {
         Bot *b = lista_de_bots[i];
@@ -43,7 +46,20 @@ int main(int argc, char** argv) {
     }
 
     // Que o melhor vença!
-    inicia_simulacao(lista_de_bots, num_bots);
+    Estatistica estatisticas = inicia_simulacao(lista_de_bots, num_bots);
+    
+    // Mostrando as estatísticas de cada bot
+    exibe_bots_stats(lista_de_bots, num_bots);
+    
+    // Mostrando as estatísticas gerais da rinha
+    calcula_t_empates(&estatisticas, lista_de_bots, num_bots);
+    calcula_p_boas_defesas(&estatisticas, lista_de_bots, num_bots);
+    calcula_p_bons_contra_ataques(&estatisticas, lista_de_bots, num_bots);
+    calcula_p_ataques_pesados(&estatisticas, lista_de_bots, num_bots);
+    calcula_p_boas_defesas(&estatisticas, lista_de_bots, num_bots);
+    calcula_m_num_acoes(&estatisticas, lista_de_bots, num_bots);
+    calcula_m_turnos_por_confronto(&estatisticas);
+    gerar_relatorio(&estatisticas);
 
     return 0;
 }

@@ -22,7 +22,7 @@ Estatistica inicia_simulacao(Bot **bots, size_t num_bots);
  * sequência de 100 confrontos. Ao final do combate, o ID do
  * vencedor é retornado
  *************************************************************/
-BotID simula_combate(Bot *bot1, Bot *bot2);
+BotID simula_combate(Bot *bot1, Bot *bot2, Estatistica *estatisticas);
 
 /**************************************************************
  * Simula um confronto, que é uma sequência de turnos nos quais
@@ -30,7 +30,7 @@ BotID simula_combate(Bot *bot1, Bot *bot2);
  * ambos os bots chegam a zero de vida. Ao final do confronto,
  * o ID do vencedor é retornado
  *************************************************************/
-BotID simula_confronto(Bot *bot1, Bot *bot2);
+BotID simula_confronto(Bot *bot1, Bot *bot2, Estatistica *estatisticas);
 
 /**************************************************************
  * Simula um turno de um confronto, que se consiste em uma
@@ -39,16 +39,30 @@ BotID simula_confronto(Bot *bot1, Bot *bot2);
 ResultadoTurno simula_turno(Bot *bot1, Bot *bot2, Historico hist_bot1, Historico hist_bot2, unsigned short int num_turno);
 
 /**************************************************************
- * Realiza os efeitos da ação de um bot contra um oponente, em
- * casos de contra-ataque, também realiza o contra-ataque do
- * oponente contra o próprio bot
- *************************************************************/
-void realiza_acao(Bot *bot, Acao acao, Bot *oponente, Acao acao_oponente);
-
-/**************************************************************
  * Nos retorna o estado de um confronto após um turno, o que
  * efetivamente equivale a checar quais bots morreram ou não
  *************************************************************/
 EstadoConfronto estado_confronto(short int vida_bot1, short int vida_bot2);
+
+/**************************************************************
+ * Processa o resultado de um combate alterando os atributos de
+ * estatística de cada bot envolvido. Ou seja, atualizando o
+ * os VDEs dos dois bots de acordo com o resultado
+ *************************************************************/
+void processa_resultado_combate(BotID resultado, Bot *bot1, Bot *bot2);
+
+/**************************************************************
+ * Processa o resultado de um confronto alterando os atributos
+ * de estatística de cada bot envolvido. Ou seja, atualizando o
+ * os KDs dos dois bots de acordo com o resultado
+ *************************************************************/
+void processa_resultado_confronto(BotID resultado, Bot *bot1, Bot *bot2);
+
+/**************************************************************
+ * Processa as ações de um turno alterando os atributos de
+ * estatística de cada bot envolvido, como o número de
+ * decisões, o número de boas defesas, etc.
+ *************************************************************/
+void processa_turno(Bot *bot1, Acao acao_bot1, Bot *bot2, Acao acao_bot2);
 
 #endif
