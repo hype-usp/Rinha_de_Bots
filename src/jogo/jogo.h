@@ -45,6 +45,13 @@ ResultadoTurno simula_turno(Bot *bot1, Bot *bot2, Historico hist_bot1, Historico
 EstadoConfronto estado_confronto(short int vida_bot1, short int vida_bot2);
 
 /**************************************************************
+ * Executa a função de tomada de decisão de cada um dos bots, e
+ * cronometra o tempo que eles demoram pensando para poder
+ * garantir a performance mínima
+ *************************************************************/
+Acao realiza_decisao(Bot *bot, Bot *oponente, Historico hist, Historico hist_oponente, unsigned short int turno);
+
+/**************************************************************
  * Processa o resultado de um combate alterando os atributos de
  * estatística de cada bot envolvido. Ou seja, atualizando o
  * os VDEs dos dois bots de acordo com o resultado

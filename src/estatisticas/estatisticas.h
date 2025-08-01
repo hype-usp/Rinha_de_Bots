@@ -16,6 +16,9 @@ void incrementa_t_confrontos(Estatistica *estatistica);
 // Mantém a contagem de número de turnos da simulação
 void incrementa_t_turnos(Estatistica *estatistica);
 
+// Calcula todas as outras estatisticas
+void calcula_estatisticas(Estatistica *estatistica, Bot **bots, size_t num_bots);
+
 // Calcula o número total de combates empatados
 void calcula_t_empates(Estatistica *estatistica, Bot **bots, size_t num_bots);
 

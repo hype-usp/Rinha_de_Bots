@@ -28,6 +28,16 @@ void incrementa_t_turnos(Estatistica *estatistica) {
 	estatistica->t_turnos++;
 }
 
+void calcula_estatisticas(Estatistica *estatistica, Bot **bots, size_t num_bots) {
+	calcula_t_empates(estatistica, bots, num_bots);
+	calcula_p_boas_defesas(estatistica, bots, num_bots);
+	calcula_p_bons_contra_ataques(estatistica, bots, num_bots);
+	calcula_p_ataques_pesados(estatistica, bots, num_bots);
+	calcula_p_boas_defesas(estatistica, bots, num_bots);
+	calcula_m_num_acoes(estatistica, bots, num_bots);
+	calcula_m_turnos_por_confronto(estatistica);
+}
+
 void calcula_t_empates(Estatistica *estatistica, Bot **bots, size_t num_bots) {
 	estatistica->t_empates = 0;
 	for(size_t i = 0; i < num_bots; i++) {

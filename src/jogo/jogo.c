@@ -23,7 +23,7 @@ Estatistica inicia_simulacao(Bot **bots, size_t num_bots) {
 		for(BotID b2 = b1 + 1; b2 < (BotID)num_bots; b2++) {
 			incrementa_t_combates(&estatisticas);
 			BotID resultado_combate;
-			printf("--------------------------------------------\n");
+			printf("\n--------------------------------------------\n");
 			printf("%s VS %s\n", bots[b1]->nome, bots[b2]->nome);
 			resultado_combate = simula_combate(bots[b1], bots[b2], &estatisticas);
 			processa_resultado_combate(resultado_combate, bots[b1], bots[b2]);
@@ -54,13 +54,13 @@ BotID simula_combate(Bot *bot1, Bot *bot2, Estatistica *estatisticas) {
 	if(saldo_resultante > 0) {
 		printf("%s VENCEU O COMBATE\n", bot1->nome);
 		return bot1->id;
-	}
-	if(saldo_resultante < 0) {
+	} else if(saldo_resultante < 0) {
 		printf("%s VENCEU O COMBATE\n", bot2->nome);
 		return bot2->id;
+	} else {
+		printf("EMPATE\n");
+		return EMPATE;
 	}
-	printf("EMPATE\n");
-	return EMPATE;
 }
 
 BotID simula_confronto(Bot *bot1, Bot *bot2, Estatistica *estatisticas) {
@@ -69,6 +69,7 @@ BotID simula_confronto(Bot *bot1, Bot *bot2, Estatistica *estatisticas) {
 	Historico hist_bot1;
 	Historico hist_bot2;
 	unsigned short int turno_atual = 0;
+
 	/**********************************************************
 	 * Loop que simula os turnos do confronto até que haja
 	 * alguma morte ou o confronto chegue no número máximo de
@@ -82,12 +83,14 @@ BotID simula_confronto(Bot *bot1, Bot *bot2, Estatistica *estatisticas) {
 		hist_bot2[turno_atual] = resultado_turno.acao_bot2;
 		turno_atual++;
 	}
+
 	/**********************************************************
 	 * Restaurando o estado de cada bot para que eles fiquem
 	 * prontos para o próximo confronto
 	 *********************************************************/
 	restaura_bot(bot1);
 	restaura_bot(bot2);
+
 	// Devolvendo o resultado final do confronto
 	if(resultado_turno.estado_confronto == BOT2_VENCEU) return bot2->id;
 	if(resultado_turno.estado_confronto == BOT1_VENCEU) return bot1->id;
@@ -96,17 +99,18 @@ BotID simula_confronto(Bot *bot1, Bot *bot2, Estatistica *estatisticas) {
 
 ResultadoTurno simula_turno(Bot *bot1, Bot *bot2, Historico hist_bot1, Historico hist_bot2, unsigned short int turno) {
 	ResultadoTurno resultado_turno;
-	// Checando se já passamos do limite máximo de turnos por confronto
 	if(turno >= MAX_TURNOS) {
 		resultado_turno.estado_confronto = EXCESSO_TURNOS;
 		return resultado_turno;
 	}
+
 	/**********************************************************
 	 * Deixando os bots tomarem suas decisões, estas duas
-	 * próximas linhas são o coração do programa
+	 * linhas são o coração do programa
 	 *********************************************************/
-	Acao acao_bot1 = bot1->tomar_decisao(bot1, bot2, hist_bot1, hist_bot2, turno);
-	Acao acao_bot2 = bot2->tomar_decisao(bot2, bot1, hist_bot2, hist_bot1, turno);
+	Acao acao_bot1 = realiza_decisao(bot1, bot2, hist_bot1, hist_bot2, turno);
+	Acao acao_bot2 = realiza_decisao(bot2, bot1, hist_bot2, hist_bot1, turno);
+
 	/**********************************************************
 	 * Validando as ações dos bots para ter certeza de que eles
 	 * não trapaceiem (mesmo que sem querer) e armazenando o
@@ -119,36 +123,13 @@ ResultadoTurno simula_turno(Bot *bot1, Bot *bot2, Historico hist_bot1, Historico
 	if(acao2_invalida) resultado_turno.acao_bot2 = VACILO;
 	else resultado_turno.acao_bot2 = acao_bot2;
 	processa_turno(bot1, acao_bot1, bot2, acao_bot2);
+	
 	/**********************************************************
 	 * Aplicando os efeitos correspondentes às ações de cada
 	 * bot, a ordem não é relevante
 	 *********************************************************/
-
-	/*Criando um clock agora para poder definir o começo do turno dos bots
-	para poder calcular depois o tempo de cada bot*/
-	clock_t tempo_inicial = clock();
-
-	/*Ação bot1*/
 	realiza_acao(bot1, acao_bot1, bot2, acao_bot2);
-	/*Agora vamos definir o tempo que demorou para executar a ação do bot 1*/
-	clock_t tempo_fim_bot1 = clock();
-
-	/*Ação bot2*/
 	realiza_acao(bot2, acao_bot2, bot1, acao_bot1);
-	/*Agora vamos definir o tempo final a ação do bot 2*/
-	clock_t tempo_fim_bot2 = clock();
-
-	/*Agora vou fazer uma metrica que vai calcular o tempo dos dois bots*/
-	double tempo_acao_bot1 = ((double)(tempo_fim_bot1 - tempo_inicial) * 1000.0) / CLOCKS_PER_SEC;
-	double tempo_acao_bot2 = ((double)(tempo_fim_bot2-tempo_fim_bot1) * 1000.0) / CLOCKS_PER_SEC;
-
-	/*Atribuindo o valor do tempo total de ação do bot por turno*/
-
-	/*GRANDE probabilidade de estar com algum ERRO nessa parte de passar os valores
-	não sei se consegui entender muito bem esse lance de bot1 e bot2 para poder salvar
-	MAS a logica do clock me parece certa, pois eu testei separada e deu certinho*/
-	bot1->tempo_decisao_total+=tempo_acao_bot1;
-	bot2->tempo_decisao_total+=tempo_acao_bot2;
 
 	/**********************************************************
 	 * Checando as condições padrão de término de confronto. O
@@ -167,6 +148,18 @@ EstadoConfronto estado_confronto(short int vida_bot1, short int vida_bot2) {
 		return BOT1_VENCEU;
 	else
 		return INACABADO;
+}
+
+Acao realiza_decisao(Bot *bot, Bot *oponente, Historico hist, Historico hist_oponente, unsigned short int turno) {
+	clock_t tempo_inicial = clock();
+	Acao acao = bot->tomar_decisao(bot, oponente, hist, hist_oponente, turno);
+	clock_t tempo_final = clock();
+
+	// Atualizando o tempo gasto por cada bot realizando ações
+	double tempo_decisao = ((double)(tempo_final - tempo_inicial) * 1000.0) / CLOCKS_PER_SEC;
+	bot->tempo_decisao_total += tempo_decisao;
+
+	return acao;
 }
 
 void processa_resultado_combate(BotID resultado, Bot *bot1, Bot *bot2) {
