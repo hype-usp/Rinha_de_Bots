@@ -11,7 +11,7 @@ CC = gcc
 # -O2: Nível de otimização 2.
 # -Isrc: Adiciona a pasta 'src' aos caminhos de busca por headers.
 #        Isso permite usar #include "bots/bots.h" em vez de #include "src/bots/bots.h".
-CFLAGS = -Wall -Wextra -g -O2 -Isrc
+CFLAGS = -Wall -g -O2 -Isrc
 
 # Flags para o linker (se necessário no futuro)
 LDFLAGS =

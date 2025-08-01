@@ -42,6 +42,8 @@ static Acao tomar_decisao(const Bot *bot, const Bot *oponente, Historico hist_bo
 		else
 			return ATAQUE_PESADO;
 	}
+
+	return RECARGA;
 }
 
 // Esta é a estrutura do seu bot, não mexa nesta linha

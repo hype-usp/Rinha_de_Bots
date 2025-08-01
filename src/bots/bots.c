@@ -65,12 +65,12 @@ void processa_acao(Bot *bot, Acao acao, Acao acao_oponente) {
 void exibe_bots_stats(Bot **bots, size_t num_bots) {
 		printf("\n");
 	for(size_t i = 0; i < num_bots; i++) {
-		printf("--------- Estatísticas do %s -----------\n", bots[i]->nome);
+		printf("\n--------- Estatísticas do %s -----------\n", bots[i]->nome);
 		printf("dano tomado: %d\n", bots[i]->dano_tomado);
 		printf("bons contra-ataques: %d\n", bots[i]->bons_contra_ataques);
 		printf("boas defesas: %d\n", bots[i]->boas_defesas);
 		printf("decisoes tomadas: %d\n", bots[i]->decisoes_tomadas);
-		printf("Tempo médio por decisao: %.7fMs\n", bots[i]->tempo_decisao_total/bots[i]->decisoes_tomadas);
+		printf("Tempo médio por decisao: %.2lf ns\n", 1000000*bots[i]->tempo_decisao_total/bots[i]->decisoes_tomadas);
 		for(size_t j = 0; j < num_bots; j++) {
 			if(i == j) continue;
 			printf("KD contra %s: %d/%d\n", bots[j]->nome, bots[i]->KDs[j].abates, bots[i]->KDs[j].mortes);

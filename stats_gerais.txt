@@ -1,18 +1,19 @@
 RELATÓRIO: ESTATÍSTICAS GERAIS DA RINHA
+
 Número de combates: 10
 Número de confrontos: 1000
-Número de turnos: 17000
-Número de empates: 6
-Média de turnos por confronto: 17.00
-Proporção de boas defesas: 33.33%
-Proporção de bons contra-ataques: 8.33%
-Proporção de ataques pesados: 68.97%
+Número de turnos: 10037
+Número de empates: 2
+Média de turnos por confronto: 10.04
+Proporção de boas defesas: -nan%
+Proporção de bons contra-ataques: -nan%
+Proporção de ataques pesados: -nan%
 
-Uso médio de cada ação por confronto
-RECARGA: 2.72
-ATAQUE: 0.58
-ATAQUE PESADO: 0.40
-DEFESA: 0.18
-CURA: 2.20
-CONTRA ATAQUE: 0.48
+Uso médio de cada ação por bot confronto
+RECARGA: 0.00
+ATAQUE: 0.00
+ATAQUE PESADO: 0.00
+DEFESA: 0.00
+CURA: 0.00
+CONTRA ATAQUE: 0.00
 VACILO: 0.00
