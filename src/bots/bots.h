@@ -55,9 +55,21 @@ bool restaura_bot(Bot *bot);
  *************************************************************/
 void processa_acao(Bot *bot, Acao acao, Acao acao_oponente);
 
+void calcula_pontuacoes(Bot **bots, size_t num_bots);
+
+int pontuacao_total(const Bot *bot, size_t num_bots);
+
+KD KD_total(const Bot *bot, size_t num_bots);
+
+VDE VDE_total(const Bot *bot, size_t num_bots);
+
 /**************************************************************
  * Função temporária/de debug, exibe as estatísticas de um bot
  *************************************************************/
 void exibe_bots_stats(Bot **bots, size_t num_bots);
+
+void gerar_relatorio_bots(Bot **bots, size_t num_bots);
+
+void gerar_header_CSV(FILE *relatorio);
 
 #endif
