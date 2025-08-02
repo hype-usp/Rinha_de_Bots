@@ -14,6 +14,7 @@ void inicializa_bot(Bot *bot, const char *nome, const char *equipe, FuncaoDecisa
 	bot->tomar_decisao = f;
 
 	for(int i = 0; i < NUM_BOTS; i++) {
+		bot->pontuacoes[i] = 0;
 		bot->KDs[i].abates = 0;
 		bot->KDs[i].mortes = 0;
 		bot->VDEs[i].vitorias = 0;
@@ -62,10 +63,45 @@ void processa_acao(Bot *bot, Acao acao, Acao acao_oponente) {
 	}
 }
 
+void calcula_pontuacoes(Bot **bots, size_t num_bots) {
+	for(size_t i = 0; i < num_bots; i++) {
+		for(size_t j = 0; j < num_bots; j++) {
+			bots[i]->pontuacoes[j] += bots[i]->KDs[j].abates;
+			bots[i]->pontuacoes[j] += bots[i]->VDEs[j].vitorias * 10;
+		}
+	}
+}
+
+int pontuacao_total(const Bot *bot, size_t num_bots) {
+	int pontuacao = 0;
+	for(size_t i = 0; i < num_bots; i++)
+		pontuacao += bot->pontuacoes[i];
+	return pontuacao;
+}
+
+KD KD_total(const Bot *bot, size_t num_bots) {
+	KD kd = { 0 };
+	for(size_t i = 0; i < num_bots; i++) {
+		kd.abates += bot->KDs[i].abates;
+		kd.mortes += bot->KDs[i].mortes;
+	}
+	return kd;
+}
+
+VDE VDE_total(const Bot *bot, size_t num_bots) {
+	VDE vde = { 0 };
+	for(size_t i = 0; i < num_bots; i++) {
+		vde.vitorias += bot->VDEs[i].vitorias;
+		vde.derrotas += bot->VDEs[i].derrotas;
+		vde.empates += bot->VDEs[i].empates;
+}
+	return vde;
+}
+
 void exibe_bots_stats(Bot **bots, size_t num_bots) {
-		printf("\n");
 	for(size_t i = 0; i < num_bots; i++) {
 		printf("\n--------- Estatísticas do %s -----------\n", bots[i]->nome);
+		printf("pontuação: %d\n", pontuacao_total(bots[i], num_bots));
 		printf("dano tomado: %d\n", bots[i]->dano_tomado);
 		printf("bons contra-ataques: %d\n", bots[i]->bons_contra_ataques);
 		printf("boas defesas: %d\n", bots[i]->boas_defesas);
@@ -77,4 +113,42 @@ void exibe_bots_stats(Bot **bots, size_t num_bots) {
 			printf("VDE contra %s: %d/%d/%d\n", bots[j]->nome, bots[i]->VDEs[j].vitorias, bots[i]->VDEs[j].derrotas, bots[i]->VDEs[j].empates);
 		}
 	}
+}
+
+void gerar_relatorio_bots(Bot **bots, size_t num_bots) {
+	FILE *relatorio = fopen("bot_stats.csv", "w");
+	gerar_header_CSV(relatorio);
+	for(size_t i = 0; i < num_bots; i++) {
+		// nome
+		fprintf(relatorio, "%s, ", bots[i]->nome);
+		// equipe
+		fprintf(relatorio, "%s, ", bots[i]->equipe);
+		// pontuação
+		fprintf(relatorio, "%d, ", pontuacao_total(bots[i], num_bots));
+		// abates
+		fprintf(relatorio, "%d, ", KD_total(bots[i], num_bots).abates);
+		// mortes
+		fprintf(relatorio, "%d, ", KD_total(bots[i], num_bots).mortes);
+		// vitórias
+		fprintf(relatorio, "%d, ", VDE_total(bots[i], num_bots).vitorias);
+		// derrotas
+		fprintf(relatorio, "%d, ", VDE_total(bots[i], num_bots).derrotas);
+		// empates
+		fprintf(relatorio, "%d, ", VDE_total(bots[i], num_bots).empates);
+		// dano tomado
+		fprintf(relatorio, "%d, ", bots[i]->dano_tomado);
+		// bons contra-ataques
+		fprintf(relatorio, "%d, ", bots[i]->bons_contra_ataques);
+		// boas defesas
+		fprintf(relatorio, "%d, ", bots[i]->boas_defesas);
+		// decisões tomadas
+		fprintf(relatorio, "%d, ", bots[i]->decisoes_tomadas);
+		// tempo de decisão
+		fprintf(relatorio, "%.2lf\n", 1000000 * bots[i]->tempo_decisao_total / bots[i]->decisoes_tomadas);
+	}
+	fclose(relatorio);
+}
+
+void gerar_header_CSV(FILE *relatorio) {
+	fputs("nome, equipe, pontuacao, abates, mortes, vitorias, derrotas, empates, dano_tomado, bons_CA, boas_DEF, decisoes, tempo_decisao\n", relatorio);	
 }

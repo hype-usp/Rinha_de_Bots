@@ -47,5 +47,5 @@ static void __attribute__((constructor)) registrar_bot(void) {
 	 * inicializa_bot(&bot, "Crododilo Bombardilo", "Hype - Eventos", (FuncaoDecisao)&tomar_decisao);
 	 * Exceto por isso, não mexa nesta linha.
 	 *********************************************************/
-    inicializa_bot(&bot, "Tenta Qualquer Coisa", "Jao Gabriel Bruni", (FuncaoDecisao)&tomar_decisao);
+    inicializa_bot(&bot, "Tenta Qualquer Coisa", "Jao Bruni", (FuncaoDecisao)&tomar_decisao);
 }

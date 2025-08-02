@@ -51,8 +51,12 @@ int main() {
     // Que o melhor vença!
     Estatistica estatisticas = inicia_simulacao(lista_de_bots, num_bots);
     
+    // Calculando a pontuação de cada bot contra cada um dos outros
+    calcula_pontuacoes(lista_de_bots, num_bots);
     // Mostrando as estatísticas de cada bot no terminal
     exibe_bots_stats(lista_de_bots, num_bots);
+    // Gerando relatório CSV das estatísticas de cada bot em bot_stats.csv
+    gerar_relatorio_bots(lista_de_bots, num_bots);
     // Calculando as estatísticas deriváveis pelos dados dos bots
     calcula_estatisticas(&estatisticas, lista_de_bots, num_bots);
     // Gerando o relatório stats_gerais.txt
