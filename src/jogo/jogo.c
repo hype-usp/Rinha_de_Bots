@@ -118,9 +118,15 @@ ResultadoTurno simula_turno(Bot *bot1, Bot *bot2, Historico hist_bot1, Historico
 	 *********************************************************/
 	bool acao1_invalida = valida_acao(acao_bot1, bot1, hist_bot1, turno);
 	bool acao2_invalida = valida_acao(acao_bot2, bot2, hist_bot2, turno);
-	if(acao1_invalida) resultado_turno.acao_bot1 = VACILO;
+	if(acao1_invalida) {
+		resultado_turno.acao_bot1 = VACILO;
+		acao_bot1 = VACILO;
+	}
 	else resultado_turno.acao_bot1 = acao_bot1;
-	if(acao2_invalida) resultado_turno.acao_bot2 = VACILO;
+	if(acao2_invalida) {
+		resultado_turno.acao_bot2 = VACILO;
+		acao_bot2 = VACILO;
+	}
 	else resultado_turno.acao_bot2 = acao_bot2;
 	processa_turno(bot1, acao_bot1, bot2, acao_bot2);
 	

@@ -33,7 +33,7 @@ int main() {
     const size_t num_bots = (size_t)(((char *)&__stop_bots - (char *)&__start_bots) / sizeof(Bot));
     Bot *lista_de_bots[num_bots];
     for (size_t i = 0; i < num_bots; i++)
-        lista_de_bots[i] = (Bot *)((char *)&__start_bots + (i * (sizeof(Bot) + 16)));
+        lista_de_bots[i] = (Bot *)((char *)&__start_bots + (i * (sizeof(Bot) + 16))); // Esse +16 é magia negra
     
     // Ordena os bots da lista para que seus índices correspondam aos seus IDs
     qsort(lista_de_bots, num_bots, sizeof(Bot *), compara_bots_por_id);
