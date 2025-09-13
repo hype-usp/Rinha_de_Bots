@@ -96,7 +96,9 @@ void calcula_m_turnos_por_confronto(Estatistica *estatistica) {
 }
 
 void gerar_relatorio(Estatistica *estatistica, size_t num_bots) {
+	remove("stats_gerais.txt");
 	FILE *relatorio = fopen("stats_gerais.txt", "w");
+	if(!relatorio) printf("NAO FOI POSSÍVEL CRIAR RELATÓRIO");
 	fputs("RELATÓRIO: ESTATÍSTICAS GERAIS DA RINHA\n\n", relatorio);
 	fprintf(relatorio, "Número de combates: %d\n", estatistica->t_combates);
 	fprintf(relatorio, "Número de confrontos: %d\n", estatistica->t_confrontos);
@@ -106,7 +108,7 @@ void gerar_relatorio(Estatistica *estatistica, size_t num_bots) {
 	fprintf(relatorio, "Proporção de boas defesas: %.2Lf%%\n", estatistica->p_boas_defesas * 100);
 	fprintf(relatorio, "Proporção de bons contra-ataques: %.2Lf%%\n", estatistica->p_bons_contra_ataques * 100);
 	fprintf(relatorio, "Proporção de ataques pesados: %.2Lf%%\n", estatistica->p_ataques_pesados * 100);
-	fputs("\nUso médio de cada ação por bot confronto\n", relatorio);
+	fputs("\nUso médio de cada ação por bot por confronto\n", relatorio);
 	char *acoes[7] = { "RECARGA", "ATAQUE", "ATAQUE PESADO", "DEFESA", "CURA", "CONTRA ATAQUE", "VACILO"};
 	for(int acao = 0; acao < NUM_ACOES; acao++) {
 		fprintf(relatorio, "%s: %.2Lf\n", acoes[acao], estatistica->m_num_acoes[acao] * num_bots / estatistica->t_confrontos / 2);
