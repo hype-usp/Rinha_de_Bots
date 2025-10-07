@@ -1,15 +1,8 @@
-#include <stdio.h>
 #include "bots.h"
 
 /**************************************************************
- * Esta é a função que os participantes da Rinha de Bots
- * deverão implementar, ela recebe como argumentos o bot que
- * está tomando a decisão, o histórico de ações do próprio bot,
- * o histórico de ações do oponente e o número do turno atual.
- * 
- * O retorno deve ser uma ação, idealmente derivada de um
- * processo decisório com base nos históricos de ação e no
- * estado atual do bot.
+ * Este bot também é bem mínimo, ele apenas alterna entre
+ * recarregar a energia duas vezes e dar um ataque pesado
  *************************************************************/
 static Acao tomar_decisao(const Bot *bot, const Bot *oponente, Historico hist_bot, Historico hist_oponente, unsigned short int turno) {
 	if((turno + 1) % 3) return RECARGA;

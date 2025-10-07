@@ -109,15 +109,6 @@ void exibe_bots_stats(Bot **bots, size_t num_bots) {
     printf("decisoes tomadas: %d\n", bots[i]->decisoes_tomadas);
     printf("Tempo médio por decisao: %.2lf ns\n",
            1000000 * bots[i]->tempo_decisao_total / bots[i]->decisoes_tomadas);
-    for (size_t j = 0; j < num_bots; j++) {
-      if (i == j)
-        continue;
-      printf("KD contra %s: %d/%d\n", bots[j]->nome, bots[i]->KDs[j].abates,
-             bots[i]->KDs[j].mortes);
-      printf("VDE contra %s: %d/%d/%d\n", bots[j]->nome,
-             bots[i]->VDEs[j].vitorias, bots[i]->VDEs[j].derrotas,
-             bots[i]->VDEs[j].empates);
-    }
   }
 }
 

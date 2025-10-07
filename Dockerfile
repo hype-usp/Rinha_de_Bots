@@ -1,5 +1,5 @@
 # BUILDER
-FROM gcc:12.2.0 as builder
+FROM gcc:12.2.0 AS builder
 WORKDIR /app
 COPY . .
 RUN make all

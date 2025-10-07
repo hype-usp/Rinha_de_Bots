@@ -2,21 +2,21 @@
 #include "estatisticas/estatisticas.h"
 #include "jogo/jogo.h"
 #include "tipos.h"
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 /**************************************************************
  * Compilação - rode o comando:
- * $ make
+ * $ make -B all
  *
  * Execução (fora do container, funciona apenas no Linux) - rode o comando:
  * $ make run
  *
  * Execução com Docker:
  * - Se você está no Windows:
- *   $ docker run -v "C:\caminho\completo\para\a\sua\pasta\Rinha_de_Bots:/app"
- *rinha-de_bots
+ *   $ docker run -v "C:\caminho\completo\para\a\sua\pasta\Rinha_de_Bots" rinha-de_bots
  * - Se você está no Linux ou MacOS
  *   $ docker run -v "$(pwd):/app" rinha-de-bots
  *************************************************************/
@@ -57,6 +57,9 @@ int main() {
 
   // Setando a seed do RNG
   srand(time(NULL));
+
+  // Avisando que a simulação está em execução
+  printf("EXECUTANDO A RINHA...");
 
   // Que o melhor vença!
   Estatistica estatisticas = inicia_simulacao(lista_de_bots, num_bots);
