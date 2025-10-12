@@ -15,7 +15,8 @@ void ataque_pesado(Bot *alvo, Acao acao_alvo) {
 }
 
 void cura(Bot *bot) {
-  bot->vida++;
+  if (bot->vida < VIDA_MAX)
+    bot->vida++;
   bot->curas--;
 }
 
