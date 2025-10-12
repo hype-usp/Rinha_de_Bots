@@ -14,7 +14,10 @@ void ataque_pesado(Bot *alvo, Acao acao_alvo) {
     alvo->vida--;
 }
 
-void cura(Bot *bot) { bot->vida++; }
+void cura(Bot *bot) {
+  bot->vida++;
+  bot->curas--;
+}
 
 void gasta_energia(Bot *bot, Acao acao) {
   if (acao == ATAQUE_PESADO)
@@ -90,6 +93,9 @@ void realiza_acao(Bot *bot, Acao acao, Bot *oponente, Acao acao_oponente) {
     break;
   case CURA:
     cura(bot);
+    break;
+  case CONTRA_ATAQUE:
+    bot->contra_ataques--;
     break;
   default:
     break;
