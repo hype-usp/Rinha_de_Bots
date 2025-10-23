@@ -32,6 +32,7 @@ Estatistica inicia_simulacao(Bot **bots, size_t num_bots) {
 }
 
 BotID simula_combate(Bot *bot1, Bot *bot2, Estatistica *estatisticas) {
+  printf("Novo combate: %s vs %s\n", bot1->nome, bot2->nome);
   /**********************************************************
    * O saldo resultante acabará:
    * positivo se o bot 1 vencer
@@ -51,11 +52,13 @@ BotID simula_combate(Bot *bot1, Bot *bot2, Estatistica *estatisticas) {
       saldo_resultante--;
   }
 
-  if (saldo_resultante > 0)
+  if (saldo_resultante > 0) {
+    printf("Vencedor: %s\n", bot1->nome);
     return bot1->id;
-  else if (saldo_resultante < 0)
+  } else if (saldo_resultante < 0) {
+    printf("Vencedor: %s\n", bot2->nome);
     return bot2->id;
-  else
+  } else
     return EMPATE;
 }
 
